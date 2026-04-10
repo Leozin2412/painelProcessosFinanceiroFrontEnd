@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Painel de Controle de Processos Financeiros - TRADSUL FINANCE" />
+  <title>Processos | TRADSUL FINANCE</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              900: '#0f172a',
+              800: '#1e3a5f',
+              700: '#1d4ed8',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style/style.css" />
+</head>
+<body class="bg-slate-100 min-h-screen font-sans">
+
+  <!-- ===== TOP NAVBAR ===== -->
+  <nav id="navbar" class="bg-blue-900 shadow-lg sticky top-0 z-50">
+    <div class="max-w-full px-6 py-3 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <div class="navbar-logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="28" height="28" rx="6" fill="#1d4ed8"/>
+            <path d="M6 14L14 6L22 14L14 22L6 14Z" fill="white" fill-opacity="0.9"/>
+            <path d="M10 14L14 10L18 14L14 18L10 14Z" fill="#1d4ed8"/>
+          </svg>
+        </div>
+        <div>
+          <span class="text-white font-bold text-lg tracking-wide">TRADSUL</span>
+          <span class="text-blue-300 font-semibold text-lg tracking-wide"> FINANCE</span>
+        </div>
+      </div>
+
+      <!-- Right: Version & User info -->
+      <div class="flex items-center gap-4">
+        <span class="text-blue-300 text-xs font-mono bg-blue-950 px-3 py-1 rounded-full border border-blue-700">
+          V 2.0.26
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HEADER ===== -->
+  <div class="max-w-full px-6 pt-6 pb-2">
+    <div class="flex items-center gap-2 mb-1">
+      <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      <h1 class="text-slate-700 font-semibold text-lg">Controle de Processos</h1>
+    </div>
+    <p class="text-slate-400 text-sm">Gerencie e acompanhe os processos financeiros em andamento.</p>
+  </div>
+
+  <main class="max-w-full px-6 pb-10 space-y-5">
+
+    <!-- ===== FILTER PANEL ===== -->
+    <section id="filter-panel" class="bg-slate-800 rounded-xl shadow-md p-5">
+      <div class="flex items-center gap-2 mb-4">
+        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+        </svg>
+        <h2 class="text-slate-200 font-medium text-sm uppercase tracking-wider">Filtros de Pesquisa</h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-3 items-end">
+
+        <!-- N. Tradsul -->
+        <div class="filter-field relative col-span-1">
+          <label for="input-codigo" class="filter-label">N. Tradsul</label>
+          <input
+            type="text"
+            id="input-codigo"
+            placeholder="Ex: 12345"
+            class="filter-input"
+            autocomplete="off"
+          />
+          <div id="autocomplete-codigo" class="autocomplete-dropdown hidden"></div>
+        </div>
+
+        <!-- Segurado -->
+        <div class="filter-field relative col-span-1 xl:col-span-2">
+          <label for="input-segurado" class="filter-label">Segurado</label>
+          <input
+            type="text"
+            id="input-segurado"
+            placeholder="Nome do segurado..."
+            class="filter-input"
+            autocomplete="off"
+          />
+          <div id="autocomplete-segurado" class="autocomplete-dropdown hidden"></div>
+        </div>
+
+        <!-- Seguradora -->
+        <div class="filter-field col-span-1">
+          <label for="select-seguradora" class="filter-label">Seguradora</label>
+          <select id="select-seguradora" class="filter-select">
+            <option value="">Todas</option>
+          </select>
+        </div>
+
+        <!-- Situação -->
+        <div class="filter-field col-span-1">
+          <label for="select-situacao" class="filter-label">Situação</label>
+          <select id="select-situacao" class="filter-select">
+            <option value="">Todas</option>
+          </select>
+        </div>
+
+        <!-- Operação -->
+        <div class="filter-field col-span-1">
+          <label for="select-operacao" class="filter-label">Operação</label>
+          <select id="select-operacao" class="filter-select">
+            <option value="">Todas</option>
+          </select>
+        </div>
+
+        <!-- Status BH -->
+        <div class="filter-field col-span-1">
+          <label for="select-status-bh" class="filter-label">Status BH</label>
+          <select id="select-status-bh" class="filter-select">
+            <option value="">Todos</option>
+          </select>
+        </div>
+
+        <!-- Alerta BH -->
+        <div class="filter-field col-span-1">
+          <label for="select-alerta-bh" class="filter-label">Alerta BH</label>
+          <select id="select-alerta-bh" class="filter-select">
+            <option value="">Todos</option>
+          </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="filter-field col-span-1 flex gap-2 items-end">
+          <button id="btn-buscar" class="btn-primary flex-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Buscar
+          </button>
+          <button id="btn-limpar" class="btn-secondary">
+            Limpar
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== DATA TABLE SECTION ===== -->
+    <section id="table-section" class="bg-white rounded-xl shadow-md overflow-hidden">
+
+      <!-- Table Header Bar -->
+      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-slate-50">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 10h18M3 14h18M3 6h18M3 18h18"/>
+          </svg>
+          <span class="text-slate-600 font-medium text-sm">Processos</span>
+          <span id="total-records-badge" class="text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded-full">–</span>
+        </div>
+        <div id="loading-indicator" class="hidden flex items-center gap-2 text-slate-400 text-xs">
+          <div class="spinner-sm"></div>
+          <span>Carregando...</span>
+        </div>
+      </div>
+
+      <!-- Scrollable Table -->
+      <div class="table-scroll-wrapper" style="overflow-x: auto; max-width: 100%; display: block;">
+        <table id="processos-table" class="w-full text-sm">
+          <thead>
+            <tr class="bg-slate-100 border-b border-slate-200">
+              <th class="th-cell"
+                style="min-width:280px;max-width:280px;position:sticky;left:0;z-index:20;background:#f8fafc;white-space:nowrap;"
+              >Situação</th>
+              <th class="th-cell"
+                style="min-width:160px;max-width:160px;position:sticky;left:220px;z-index:20;background:#f8fafc;white-space:nowrap;border-right:2px solid #e2e8f0;"
+              >Cód. Sinistro</th>
+              <th class="th-cell" style="min-width:160px;white-space:nowrap;">Segurado</th>
+              <th class="th-cell" style="min-width:130px;white-space:nowrap;">Data Cadastro</th>
+              <th class="th-cell" style="min-width:150px;white-space:nowrap;">Seguradora</th>
+              <th class="th-cell" style="min-width:130px;white-space:nowrap;">Operação</th>
+              <th class="th-cell" style="min-width:130px;white-space:nowrap;">Últ. Atividade</th>
+              <th class="th-cell" style="min-width:150px;white-space:nowrap;">Alerta Cobrança</th>
+              <th class="th-cell" style="min-width:170px;white-space:nowrap;">Status BH</th>
+              <th class="th-cell" style="min-width:320px;white-space:nowrap;">OBS</th>
+              <th class="th-cell text-center" style="min-width:130px; white-space:nowrap;">Total H Cobrar</th>
+              <th class="th-cell text-center" style="min-width:140px; white-space:nowrap;">Total H Cobradas</th>
+              <th class="th-cell text-center" style="min-width:140px; white-space:nowrap;">Total H Sinistro</th>
+              <th class="th-cell" style="min-width:180px;white-space:nowrap;">Alerta BH</th>
+              <th class="th-cell text-center" style="min-width:110px;white-space:nowrap;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <!-- Populated by JS -->
+            <tr id="row-placeholder">
+              <td colspan="15" class="text-center py-16 text-slate-400">
+                <div class="flex flex-col items-center gap-3">
+                  <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  <span class="text-sm">Nenhum processo encontrado.</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div id="pagination-bar" class="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-slate-50">
+        <span id="pagination-info" class="text-xs text-slate-500">–</span>
+        <div class="flex items-center gap-2">
+          <button id="btn-prev" class="pagination-btn" disabled>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Anterior
+          </button>
+          <div id="page-numbers" class="flex gap-1"></div>
+          <button id="btn-next" class="pagination-btn" disabled>
+            Próximo
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+  <!-- Deferred JS -->
+  <script src="script/processos.js" defer></script>
+</body>
+</html>
