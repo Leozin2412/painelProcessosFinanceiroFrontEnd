@@ -484,7 +484,10 @@ function renderTableRows(dados) {
 function updatePagination(meta) {
   if (!meta) return;
 
-  const { pagina = 1, total_paginas = 1, total = 0, limite = PER_PAGE } = meta;
+  const total = parseInt(meta.total || 0, 10);
+  const limite = parseInt(meta.limit || meta.limite || PER_PAGE, 10);
+  const total_paginas = parseInt(meta.total_pages || meta.total_paginas || 1, 10);
+  const pagina = parseInt(meta.page || meta.pagina || 1, 10);
 
   state.currentPage = pagina;
   state.totalPages = total_paginas;
@@ -500,8 +503,24 @@ function updatePagination(meta) {
 
   dom.totalRecordsBadge.textContent = total > 0 ? total : '0';
 
-  dom.btnPrev.disabled = pagina <= 1;
-  dom.btnNext.disabled = pagina >= total_paginas;
+  const disablePrev = pagina <= 1;
+  const disableNext = pagina >= total_paginas;
+
+  if (disablePrev) {
+    dom.btnPrev.disabled = true;
+    dom.btnPrev.setAttribute('disabled', 'true');
+  } else {
+    dom.btnPrev.disabled = false;
+    dom.btnPrev.removeAttribute('disabled');
+  }
+
+  if (disableNext) {
+    dom.btnNext.disabled = true;
+    dom.btnNext.setAttribute('disabled', 'true');
+  } else {
+    dom.btnNext.disabled = false;
+    dom.btnNext.removeAttribute('disabled');
+  }
 
   // Page number buttons (show up to 7 pages centered on current)
   dom.pageNumbers.innerHTML = '';
@@ -549,7 +568,10 @@ function buildPageRange(current, total) {
  * @param {number} page
  */
 function goToPage(page) {
-  if (page < 1 || page > state.totalPages || page === state.currentPage) return;
+  // Relaxed guard clause: prevent going below page 1 or staying on the same page.
+  // We remove the strict `page > state.totalPages` check to support APIs that don't return total page counts.
+  if (page < 1 || page === state.currentPage) return;
+  
   state.currentPage = page;
   fetchProcessos();
 }
@@ -670,14 +692,16 @@ async function fetchProcessos() {
   setLoading(true);
 
   const params = {
-    pagina: state.currentPage,
-    limite: PER_PAGE,
+    page: state.currentPage,
+    limit: PER_PAGE,
     ...Object.fromEntries(
       Object.entries(state.activeFilters).filter(([, v]) => v !== '')
     ),
   };
 
   const url = `${API_BASE}/processos${buildQueryString(params)}`;
+
+  console.log('🔄 Fetching API:', url);
 
   try {
     const result = await apiFetch(url);
@@ -692,10 +716,35 @@ async function fetchProcessos() {
       updatePagination(meta);
     } else {
       // fallback when API returns no meta
-      dom.totalRecordsBadge.textContent = Array.isArray(dados) ? dados.length : '?';
-      dom.paginationInfo.textContent = `${dados.length} registro(s) exibido(s)`;
-      dom.btnPrev.disabled = true;
-      dom.btnNext.disabled = true;
+      const count = Array.isArray(dados) ? dados.length : 0;
+      dom.totalRecordsBadge.textContent = count > 0 ? count : '?';
+      dom.paginationInfo.textContent = `${count} registro(s) exibido(s) (Página ${state.currentPage})`;
+      
+      const disablePrev = state.currentPage <= 1;
+      const disableNext = count < PER_PAGE;
+
+      if (disablePrev) {
+        dom.btnPrev.disabled = true;
+        dom.btnPrev.setAttribute('disabled', 'true');
+      } else {
+        dom.btnPrev.disabled = false;
+        dom.btnPrev.removeAttribute('disabled');
+      }
+
+      if (disableNext) {
+        dom.btnNext.disabled = true;
+        dom.btnNext.setAttribute('disabled', 'true');
+      } else {
+        dom.btnNext.disabled = false;
+        dom.btnNext.removeAttribute('disabled');
+      }
+
+      // Update page numbers for flat array fallback
+      dom.pageNumbers.innerHTML = '';
+      const btn = document.createElement('button');
+      btn.textContent = state.currentPage;
+      btn.className = 'page-number-btn active';
+      dom.pageNumbers.appendChild(btn);
     }
 
   } catch (err) {
@@ -937,8 +986,18 @@ function handleFilterEnterKey(e) {
 /* ============================================================
    PAGINATION EVENT HANDLERS
    ============================================================ */
-dom.btnPrev.addEventListener('click', () => goToPage(state.currentPage - 1));
-dom.btnNext.addEventListener('click', () => goToPage(state.currentPage + 1));
+// Pagination Event Listeners
+dom.btnPrev.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    goToPage(state.currentPage - 1);
+});
+
+dom.btnNext.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    goToPage(state.currentPage + 1);
+});
 
 /* ============================================================
    SEARCH / CLEAR BUTTONS
