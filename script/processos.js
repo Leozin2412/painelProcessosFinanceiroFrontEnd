@@ -16,7 +16,7 @@
 /* ============================================================
    CONFIGURATION
    ============================================================ */
-const API_BASE = 'https://painelprocessosfinanceirobackend.onrender.com/api';
+const API_BASE = 'http://localhost:3000/api';
 const PER_PAGE = 20;
 
 /* ============================================================
@@ -35,16 +35,16 @@ const state = {
    ============================================================ */
 const dom = {
   // Filter inputs
-  inputCodigo:      document.getElementById('input-codigo'),
-  inputSegurado:    document.getElementById('input-segurado'),
+  inputCodigo: document.getElementById('input-codigo'),
+  inputSegurado: document.getElementById('input-segurado'),
   selectSeguradora: document.getElementById('select-seguradora'),
-  selectSituacao:   document.getElementById('select-situacao'),
-  selectOperacao:   document.getElementById('select-operacao'),
-  selectStatusBH:   document.getElementById('select-status-bh'),
-  selectAlertaBH:   document.getElementById('select-alerta-bh'),
+  selectSituacao: document.getElementById('select-situacao'),
+  selectOperacao: document.getElementById('select-operacao'),
+  selectStatusBH: document.getElementById('select-status-bh'),
+  selectAlertaBH: document.getElementById('select-alerta-bh'),
 
   // Autocomplete containers
-  autocompleteCodigo:   document.getElementById('autocomplete-codigo'),
+  autocompleteCodigo: document.getElementById('autocomplete-codigo'),
   autocompleteSegurado: document.getElementById('autocomplete-segurado'),
 
   // Actions
@@ -52,24 +52,24 @@ const dom = {
   btnLimpar: document.getElementById('btn-limpar'),
 
   // Table
-  tableBody:          document.getElementById('table-body'),
-  loadingIndicator:   document.getElementById('loading-indicator'),
-  totalRecordsBadge:  document.getElementById('total-records-badge'),
+  tableBody: document.getElementById('table-body'),
+  loadingIndicator: document.getElementById('loading-indicator'),
+  totalRecordsBadge: document.getElementById('total-records-badge'),
 
   // Pagination
-  btnPrev:       document.getElementById('btn-prev'),
-  btnNext:       document.getElementById('btn-next'),
-  pageNumbers:   document.getElementById('page-numbers'),
+  btnPrev: document.getElementById('btn-prev'),
+  btnNext: document.getElementById('btn-next'),
+  pageNumbers: document.getElementById('page-numbers'),
   paginationInfo: document.getElementById('pagination-info'),
 
   // Modal Gerar BH
-  modalGerarBH:    document.getElementById('modal-gerar-bh'),
-  formGerarBH:     document.getElementById('form-gerar-bh'),
-  modalProcesso:   document.getElementById('modal-processo'),
-  modalDtInicial:  document.getElementById('modal-dt-inicial'),
-  modalDtFinal:    document.getElementById('modal-dt-final'),
-  btnCancelarBH:   document.getElementById('btn-cancelar-bh'),
-  btnSubmitBH:     document.getElementById('btn-submit-bh'),
+  modalGerarBH: document.getElementById('modal-gerar-bh'),
+  formGerarBH: document.getElementById('form-gerar-bh'),
+  modalProcesso: document.getElementById('modal-processo'),
+  modalDtInicial: document.getElementById('modal-dt-inicial'),
+  modalDtFinal: document.getElementById('modal-dt-final'),
+  btnCancelarBH: document.getElementById('btn-cancelar-bh'),
+  btnSubmitBH: document.getElementById('btn-submit-bh'),
 };
 
 /* ============================================================
@@ -142,12 +142,12 @@ async function apiFetch(url) {
 
 /** STATUS BH dropdown options (inline select) */
 const STATUS_BH_OPTIONS = [
-  { value: '',                       label: 'Nenhum' },
-  { value: 'Pendente',               label: 'Pendente' },
-  { value: 'Em Análise',             label: 'Em Análise' },
-  { value: 'Aguardando Assinatura',  label: 'Aguardando Assinatura' },
-  { value: 'Revisado',               label: 'Revisado' },
-  { value: 'Concluído',              label: 'Concluído' },
+  { value: '', label: 'Nenhum' },
+  { value: 'Pendente', label: 'Pendente' },
+  { value: 'Em Análise', label: 'Em Análise' },
+  { value: 'Aguardando Assinatura', label: 'Aguardando Assinatura' },
+  { value: 'Revisado', label: 'Revisado' },
+  { value: 'Concluído', label: 'Concluído' },
 ];
 
 /**
@@ -164,11 +164,11 @@ function situacaoBadgeClass(situacao) {
   // Keep existing fallbacks for others
   const map = {
     'ENCERRADO FINANCEIRAMENTE': 'badge-encerrado-fin',
-    'CONCLUÍDO':  'badge-concluido',
-    'CONCLUIDO':  'badge-concluido',
-    'CANCELADO':  'badge-cancelado',
-    'PENDENTE':   'badge-pendente',
-    'SUSPENSO':   'badge-suspenso',
+    'CONCLUÍDO': 'badge-concluido',
+    'CONCLUIDO': 'badge-concluido',
+    'CANCELADO': 'badge-cancelado',
+    'PENDENTE': 'badge-pendente',
+    'SUSPENSO': 'badge-suspenso',
   };
   return map[s] ?? 'badge-default';
 }
@@ -186,8 +186,8 @@ function alertaBadgeClass(alerta) {
   if (s === 'COBRANÇA IMEDIATA' || s === 'COBRANCA IMEDIATA') return 'badge-cobranca-imediata';
   if (s === 'NO PRAZO') return 'badge-no-prazo';
   // Keep existing fallbacks for others
-  if (s.includes('OK') || s.includes('NORMAL'))   return 'badge-alerta-ok';
-  if (s.includes('AVISO') || s.includes('ATEN'))  return 'badge-alerta-aviso';
+  if (s.includes('OK') || s.includes('NORMAL')) return 'badge-alerta-ok';
+  if (s.includes('AVISO') || s.includes('ATEN')) return 'badge-alerta-aviso';
   if (s.includes('CRÍT') || s.includes('CRITIC')) return 'badge-alerta-critico';
   return 'badge-default';
 }
@@ -236,11 +236,11 @@ async function loadFilterOptions() {
   try {
     const data = await apiFetch(`${API_BASE}/opcoes-filtros`);
 
-    if (data.situacao)    populateSelect(dom.selectSituacao,   data.situacao);
-    if (data.seguradora)  populateSelect(dom.selectSeguradora, data.seguradora);
-    if (data.operacao)    populateSelect(dom.selectOperacao,   data.operacao);
-    if (data.status_bh)   populateSelect(dom.selectStatusBH,  data.status_bh);
-    if (data.alerta_bh)   populateSelect(dom.selectAlertaBH,  data.alerta_bh);
+    if (data.situacao) populateSelect(dom.selectSituacao, data.situacao);
+    if (data.seguradora) populateSelect(dom.selectSeguradora, data.seguradora);
+    if (data.operacao) populateSelect(dom.selectOperacao, data.operacao);
+    if (data.status_bh) populateSelect(dom.selectStatusBH, data.status_bh);
+    if (data.alerta_bh) populateSelect(dom.selectAlertaBH, data.alerta_bh);
 
   } catch (err) {
     console.error('[loadFilterOptions]', err);
@@ -259,12 +259,12 @@ async function loadFilterOptions() {
 function collectFilters() {
   return {
     codigo_sinistro: dom.inputCodigo.value.trim(),
-    segurado:        dom.inputSegurado.value.trim(),
-    seguradora:      dom.selectSeguradora.value,
-    situacao:        dom.selectSituacao.value,
-    operacao:        dom.selectOperacao.value,
-    status_bh:       dom.selectStatusBH.value,
-    alerta_bh:       dom.selectAlertaBH.value,
+    segurado: dom.inputSegurado.value.trim(),
+    seguradora: dom.selectSeguradora.value,
+    situacao: dom.selectSituacao.value,
+    operacao: dom.selectOperacao.value,
+    status_bh: dom.selectStatusBH.value,
+    alerta_bh: dom.selectAlertaBH.value,
   };
 }
 
@@ -285,12 +285,12 @@ function setLoading(isLoading) {
  * @param {number} index - row index for animation delay
  */
 function renderRow(processo, index) {
-  const delay       = Math.min(index * 30, 300);
-  const codigo      = processo.codigo_sinistro ?? '';
+  const delay = Math.min(index * 30, 300);
+  const codigo = processo.codigo_sinistro ?? '';
 
-  const situacaoClass       = situacaoBadgeClass(processo.situacao);
+  const situacaoClass = situacaoBadgeClass(processo.situacao);
   const alertaCobrancaClass = alertaBadgeClass(processo.alerta_cobranca);
-  const alertaBhClass       = alertaBadgeClass(processo.alerta_bh);
+  const alertaBhClass = alertaBadgeClass(processo.alerta_bh);
 
   // Build STATUS BH inline select options
   const statusOptions = STATUS_BH_OPTIONS.map(opt => {
@@ -303,7 +303,7 @@ function renderRow(processo, index) {
     if (!isoString) return '—';
     try {
       // Clean string: remove time and timezone (e.g., "2023-12-21 16:59:43.733+00" -> "2023-12-21")
-      const datePart = isoString.split(' ')[0].split('T')[0]; 
+      const datePart = isoString.split(' ')[0].split('T')[0];
       const [year, month, day] = datePart.split('-');
       if (year && month && day) return `${day}/${month}/${year}`;
       return isoString;
@@ -484,10 +484,8 @@ function renderTableRows(dados) {
 function updatePagination(meta) {
   if (!meta) return;
 
-  const total = parseInt(meta.total || 0, 10);
-  const limite = parseInt(meta.limit || meta.limite || PER_PAGE, 10);
-  const total_paginas = parseInt(meta.total_pages || meta.total_paginas || 1, 10);
-  const pagina = parseInt(meta.page || meta.pagina || 1, 10);
+  const { total_paginas = 1, total = 0, limite = PER_PAGE } = meta;
+  const pagina = parseInt(meta.pagina || 1, 10);
 
   state.currentPage = pagina;
   state.totalPages = total_paginas;
@@ -571,7 +569,7 @@ function goToPage(page) {
   // Relaxed guard clause: prevent going below page 1 or staying on the same page.
   // We remove the strict `page > state.totalPages` check to support APIs that don't return total page counts.
   if (page < 1 || page === state.currentPage) return;
-  
+
   state.currentPage = page;
   fetchProcessos();
 }
@@ -616,7 +614,7 @@ async function handleStatusBHChange(e) {
   const select = e.target.closest('select.inline-select[data-campo="status_bh"]');
   if (!select) return;
 
-  const row    = select.closest('tr[data-codigo]');
+  const row = select.closest('tr[data-codigo]');
   const codigo = row?.dataset.codigo;
   if (!codigo) return;
 
@@ -642,18 +640,18 @@ async function handleStatusBHChange(e) {
  * @param {Event} e
  */
 async function handleObsAction(e) {
-  const saveBtn  = e.target.closest('.obs-save-btn');
+  const saveBtn = e.target.closest('.obs-save-btn');
   const clearBtn = e.target.closest('.obs-clear-btn');
   if (!saveBtn && !clearBtn) return;
 
   const wrapper = (saveBtn ?? clearBtn).closest('.obs-cell-wrapper');
-  const input   = wrapper?.querySelector('.inline-obs-input');
-  const row     = (saveBtn ?? clearBtn).closest('tr[data-codigo]');
-  const codigo  = row?.dataset.codigo;
+  const input = wrapper?.querySelector('.inline-obs-input');
+  const row = (saveBtn ?? clearBtn).closest('tr[data-codigo]');
+  const codigo = row?.dataset.codigo;
   if (!codigo || !input) return;
 
-  const isClear   = Boolean(clearBtn);
-  const obsValue  = isClear ? null : input.value.trim();
+  const isClear = Boolean(clearBtn);
+  const obsValue = isClear ? null : input.value.trim();
 
   if (isClear) input.value = '';
 
@@ -692,8 +690,8 @@ async function fetchProcessos() {
   setLoading(true);
 
   const params = {
-    page: state.currentPage,
-    limit: PER_PAGE,
+    pagina: state.currentPage,
+    limite: PER_PAGE,
     ...Object.fromEntries(
       Object.entries(state.activeFilters).filter(([, v]) => v !== '')
     ),
@@ -708,7 +706,7 @@ async function fetchProcessos() {
 
     // Support both { dados, meta } and flat array responses
     const dados = result.dados ?? result.data ?? result ?? [];
-    const meta  = result.meta ?? result.pagination ?? null;
+    const meta = result.meta ?? result.pagination ?? null;
 
     renderTableRows(dados);
 
@@ -719,7 +717,7 @@ async function fetchProcessos() {
       const count = Array.isArray(dados) ? dados.length : 0;
       dom.totalRecordsBadge.textContent = count > 0 ? count : '?';
       dom.paginationInfo.textContent = `${count} registro(s) exibido(s) (Página ${state.currentPage})`;
-      
+
       const disablePrev = state.currentPage <= 1;
       const disableNext = count < PER_PAGE;
 
@@ -870,13 +868,13 @@ function handleSearch() {
 
 /** Handle "Limpar" button click — reset form & reload. */
 function handleClear() {
-  dom.inputCodigo.value     = '';
-  dom.inputSegurado.value   = '';
+  dom.inputCodigo.value = '';
+  dom.inputSegurado.value = '';
   dom.selectSeguradora.value = '';
-  dom.selectSituacao.value   = '';
-  dom.selectOperacao.value   = '';
-  dom.selectStatusBH.value   = '';
-  dom.selectAlertaBH.value   = '';
+  dom.selectSituacao.value = '';
+  dom.selectOperacao.value = '';
+  dom.selectStatusBH.value = '';
+  dom.selectAlertaBH.value = '';
 
   closeAutocomplete(dom.autocompleteCodigo);
   closeAutocomplete(dom.autocompleteSegurado);
@@ -949,23 +947,53 @@ async function handleSubmitBH(e) {
 
   const btn = dom.btnSubmitBH;
   const originalText = btn.innerHTML;
-  
+
   // Show loading state
   btn.disabled = true;
   btn.innerHTML = `<svg class="w-5 h-5 animate-spin mr-2 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Gerando...`;
 
   try {
-    const response = await fetch('https://painelprocessosfinanceirobackend.onrender.com/automacao/ts/export', {
+    const response = await fetch('/automacao/ts/export', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+      // Try to read error body as text for a more useful message
+      const errBody = await response.text().catch(() => 'Erro desconhecido');
+      throw new Error(`HTTP ${response.status}: ${errBody}`);
     }
 
-    // Success
+    // --- Extract filename from Content-Disposition header ---
+    const disposition = response.headers.get('Content-Disposition');
+    let filename = 'boletim_horas.xls'; // sensible default
+    if (disposition) {
+      // Handles both: filename="name.xls" and filename*=UTF-8''name.xls
+      const filenameMatch = disposition.match(/filename\*?=['"]?(?:UTF-8'')?([^;\n"']+)/i);
+      if (filenameMatch && filenameMatch[1]) {
+        filename = decodeURIComponent(filenameMatch[1].trim());
+      }
+    }
+
+    // --- Process response as binary Blob ---
+    const blob = await response.blob();
+
+    // --- Trigger browser download via temporary <a> element ---
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+
+    // Cleanup
+    setTimeout(() => {
+      URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(link);
+    }, 150);
+
     showToast('Boletim gerado com sucesso!', 'success');
     closeModalBH();
   } catch (err) {
@@ -988,15 +1016,15 @@ function handleFilterEnterKey(e) {
    ============================================================ */
 // Pagination Event Listeners
 dom.btnPrev.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    goToPage(state.currentPage - 1);
+  e.preventDefault();
+  e.stopPropagation();
+  goToPage(state.currentPage - 1);
 });
 
 dom.btnNext.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    goToPage(state.currentPage + 1);
+  e.preventDefault();
+  e.stopPropagation();
+  goToPage(state.currentPage + 1);
 });
 
 /* ============================================================
@@ -1035,7 +1063,7 @@ dom.tableBody.addEventListener('change', handleStatusBHChange);
 /* ============================================================
    AUTOCOMPLETE SETUP
    ============================================================ */
-attachAutocomplete(dom.inputCodigo,   dom.autocompleteCodigo,   'codigo_sinistro');
+attachAutocomplete(dom.inputCodigo, dom.autocompleteCodigo, 'codigo_sinistro');
 attachAutocomplete(dom.inputSegurado, dom.autocompleteSegurado, 'segurado');
 
 /* ============================================================
