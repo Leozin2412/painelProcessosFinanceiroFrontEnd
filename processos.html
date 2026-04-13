@@ -261,6 +261,39 @@
   <!-- ===== TOAST NOTIFICATION ===== -->
   <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
 
+  <!-- ===== MODAL GERAR BH ===== -->
+  <div id="modal-gerar-bh" class="fixed inset-0 z-[100] bg-slate-900/50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+      <h2 class="text-xl font-bold text-blue-700 mb-4">Gerador de Boletins de Horas</h2>
+      
+      <form id="form-gerar-bh" class="space-y-4">
+        <div>
+          <label for="modal-processo" class="block text-sm font-medium text-slate-700 mb-1">Nº Processo</label>
+          <input type="text" id="modal-processo" readonly class="w-full border border-slate-300 rounded-md px-3 py-2 bg-gray-100 cursor-not-allowed text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div>
+          <label for="modal-dt-inicial" class="block text-sm font-medium text-slate-700 mb-1">Data e Hora Inicial</label>
+          <input type="datetime-local" id="modal-dt-inicial" required class="w-full border border-slate-300 rounded-md px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div>
+          <label for="modal-dt-final" class="block text-sm font-medium text-slate-700 mb-1">Data e Hora Final</label>
+          <input type="datetime-local" id="modal-dt-final" required class="w-full border border-slate-300 rounded-md px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="flex flex-col gap-3 mt-6">
+          <button type="submit" id="btn-submit-bh" class="bg-blue-700 hover:bg-blue-800 text-white w-full py-2.5 rounded-md font-semibold transition-colors flex justify-center items-center gap-2">
+            Gerar Boletim
+          </button>
+          <button type="button" id="btn-cancelar-bh" class="text-slate-500 hover:text-slate-700 text-sm font-medium transition-colors">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Deferred JS -->
   <script src="script/processos.js" defer></script>
 </body>

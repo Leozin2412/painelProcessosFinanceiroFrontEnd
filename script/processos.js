@@ -61,6 +61,15 @@ const dom = {
   btnNext:       document.getElementById('btn-next'),
   pageNumbers:   document.getElementById('page-numbers'),
   paginationInfo: document.getElementById('pagination-info'),
+
+  // Modal Gerar BH
+  modalGerarBH:    document.getElementById('modal-gerar-bh'),
+  formGerarBH:     document.getElementById('form-gerar-bh'),
+  modalProcesso:   document.getElementById('modal-processo'),
+  modalDtInicial:  document.getElementById('modal-dt-inicial'),
+  modalDtFinal:    document.getElementById('modal-dt-final'),
+  btnCancelarBH:   document.getElementById('btn-cancelar-bh'),
+  btnSubmitBH:     document.getElementById('btn-submit-bh'),
 };
 
 /* ============================================================
@@ -417,6 +426,8 @@ function renderRow(processo, index) {
         <button
           class="btn-gerar-bh"
           data-codigo="${codigo}"
+          data-ult-atividade="${processo.dat_ultima_cobranca || ''}"
+          data-data-cadastro="${processo.dat_criacao_sinistro || ''}"
           title="Gerar BH para ${processo.segurado ?? codigo}"
           aria-label="Gerar BH para processo ${codigo}">
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -826,16 +837,96 @@ function handleClear() {
   fetchProcessos();
 }
 
-/** Handle "Gerar BH" button clicks via event delegation on tbody. */
+/** 
+ * Handle "Gerar BH" button clicks via event delegation on tbody. 
+ * Opens the modal and pre-fills the form data.
+ */
 function handleGerarBH(e) {
   const btn = e.target.closest('.btn-gerar-bh');
   if (!btn) return;
 
   const codigo = btn.dataset.codigo;
-  showToast(`Gerando BH para o processo: ${codigo}`, 'info');
+  const ultAtividade = btn.dataset.ultAtividade;
+  const dataCadastro = btn.dataset.dataCadastro;
+  let dtInicialValue = '';
 
-  // TODO: wire up to actual BH generation endpoint
-  console.log('[GerarBH] codigo_sinistro =', codigo);
+  if (ultAtividade) {
+    // Has Ultima Atividade: Add 1 day, set to 00:00
+    const datePart = ultAtividade.split(' ')[0].split('T')[0]; // Extract YYYY-MM-DD safely
+    const d = new Date(datePart + 'T00:00:00'); // Force local midnight
+    d.setDate(d.getDate() + 1); // Add 1 day
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    dtInicialValue = `${yyyy}-${mm}-${dd}T00:00`;
+  } else if (dataCadastro) {
+    // Empty Ultima Atividade, use Cadastro: EXACT day, set to 00:00
+    const datePart = dataCadastro.split(' ')[0].split('T')[0];
+    dtInicialValue = `${datePart}T00:00`;
+  } else {
+    // Fallback: Today at 00:00
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    dtInicialValue = `${yyyy}-${mm}-${dd}T00:00`;
+  }
+
+  // Pre-fill the modal inputs
+  document.getElementById('modal-processo').value = codigo;
+  document.getElementById('modal-dt-inicial').value = dtInicialValue;
+  // Clear final date or set to today
+  document.getElementById('modal-dt-final').value = '';
+
+  // Show modal
+  dom.modalGerarBH.classList.remove('hidden');
+}
+
+/** Close the Gerar BH modal */
+function closeModalBH() {
+  dom.modalGerarBH.classList.add('hidden');
+  dom.formGerarBH.reset();
+}
+
+/** Handle submit on Gerar BH form */
+async function handleSubmitBH(e) {
+  e.preventDefault();
+
+  const payload = {
+    processo: dom.modalProcesso.value,
+    DtInicial: dom.modalDtInicial.value,
+    DtFinal: dom.modalDtFinal.value
+  };
+
+  const btn = dom.btnSubmitBH;
+  const originalText = btn.innerHTML;
+  
+  // Show loading state
+  btn.disabled = true;
+  btn.innerHTML = `<svg class="w-5 h-5 animate-spin mr-2 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Gerando...`;
+
+  try {
+    const response = await fetch('/automacao/ts/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    // Success
+    showToast('Boletim gerado com sucesso!', 'success');
+    closeModalBH();
+  } catch (err) {
+    console.error('[handleSubmitBH]', err);
+    showToast(`Erro ao gerar boletim: ${err.message}`, 'error');
+  } finally {
+    // Restore button state
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
 }
 
 /** Handle Enter key in filter inputs to trigger search. */
@@ -861,6 +952,15 @@ dom.btnLimpar.addEventListener('click', handleClear);
 [dom.inputCodigo, dom.inputSegurado].forEach(el => {
   el.addEventListener('keydown', handleFilterEnterKey);
 });
+
+/* ============================================================
+   MODAL CONFIGURATION
+   ============================================================ */
+dom.btnCancelarBH.addEventListener('click', closeModalBH);
+dom.modalGerarBH.addEventListener('click', (e) => {
+  if (e.target === dom.modalGerarBH) closeModalBH(); // Close on overlay click
+});
+dom.formGerarBH.addEventListener('submit', handleSubmitBH);
 
 /* ============================================================
    TABLE DELEGATION
