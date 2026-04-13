@@ -16,8 +16,11 @@
 /* ============================================================
    CONFIGURATION
    ============================================================ */
+// const API_BASE = 'http://localhost:3000/api';
+// const PER_PAGE = 50;
 const API_BASE = 'https://painelprocessosfinanceirobackend.onrender.com/api';
-const PER_PAGE = 20;
+const PER_PAGE = 50;
+
 
 /* ============================================================
    STATE
@@ -143,11 +146,9 @@ async function apiFetch(url) {
 /** STATUS BH dropdown options (inline select) */
 const STATUS_BH_OPTIONS = [
   { value: '', label: 'Nenhum' },
-  { value: 'Pendente', label: 'Pendente' },
-  { value: 'Em Análise', label: 'Em Análise' },
-  { value: 'Aguardando Assinatura', label: 'Aguardando Assinatura' },
-  { value: 'Revisado', label: 'Revisado' },
-  { value: 'Concluído', label: 'Concluído' },
+  { value: 'ok', label: 'OK' },
+  { value: 'revisado', label: 'REVISADO' },
+
 ];
 
 /**
@@ -479,20 +480,20 @@ function renderTableRows(dados) {
 
 /**
  * Update pagination controls based on meta data.
- * @param {{ pagina: number, total_paginas: number, total: number, limite: number }} meta
+ * @param {{ page: number, totalPages: number, total: number, limit: number }} meta
  */
 function updatePagination(meta) {
   if (!meta) return;
 
-  const { total_paginas = 1, total = 0, limite = PER_PAGE } = meta;
-  const pagina = parseInt(meta.pagina || 1, 10);
+  const { totalPages = 1, total = 0, limit = PER_PAGE } = meta;
+  const page = parseInt(meta.page || 1, 10);
 
-  state.currentPage = pagina;
-  state.totalPages = total_paginas;
+  state.currentPage = page;
+  state.totalPages = totalPages;
   state.totalRecords = total;
 
-  const start = (pagina - 1) * limite + 1;
-  const end = Math.min(pagina * limite, total);
+  const start = (page - 1) * limit + 1;
+  const end = Math.min(page * limit, total);
 
   dom.paginationInfo.textContent =
     total > 0
@@ -501,8 +502,8 @@ function updatePagination(meta) {
 
   dom.totalRecordsBadge.textContent = total > 0 ? total : '0';
 
-  const disablePrev = pagina <= 1;
-  const disableNext = pagina >= total_paginas;
+  const disablePrev = page <= 1;
+  const disableNext = page >= totalPages;
 
   if (disablePrev) {
     dom.btnPrev.disabled = true;
@@ -522,7 +523,7 @@ function updatePagination(meta) {
 
   // Page number buttons (show up to 7 pages centered on current)
   dom.pageNumbers.innerHTML = '';
-  const range = buildPageRange(pagina, total_paginas);
+  const range = buildPageRange(page, totalPages);
   range.forEach(p => {
     if (p === '...') {
       const ellipsis = document.createElement('span');
@@ -532,10 +533,10 @@ function updatePagination(meta) {
     } else {
       const btn = document.createElement('button');
       btn.textContent = p;
-      btn.className = `page-number-btn${p === pagina ? ' active' : ''}`;
+      btn.className = `page-number-btn${p === page ? ' active' : ''}`;
       btn.dataset.page = p;
       btn.setAttribute('aria-label', `Ir para página ${p}`);
-      if (p === pagina) btn.setAttribute('aria-current', 'page');
+      if (p === page) btn.setAttribute('aria-current', 'page');
       btn.addEventListener('click', () => goToPage(p));
       dom.pageNumbers.appendChild(btn);
     }
@@ -690,8 +691,8 @@ async function fetchProcessos() {
   setLoading(true);
 
   const params = {
-    pagina: state.currentPage,
-    limite: PER_PAGE,
+    page: state.currentPage,
+    limit: PER_PAGE,
     ...Object.fromEntries(
       Object.entries(state.activeFilters).filter(([, v]) => v !== '')
     ),
