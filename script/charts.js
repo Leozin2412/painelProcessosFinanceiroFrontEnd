@@ -366,15 +366,9 @@ function formatHours(value) {
 
 function populateCards(cards) {
   if (!cards) return;
-  animateValue('card-total-horas',    cards.total_horas,          formatHours);
-  animateValue('card-valor-cobrado',  cards.valor_horas_cobradas, formatBRL);
-  animateValue('card-valor-a-cobrar', cards.valor_horas_cobraveis, formatBRL);
-
-  const elHorasCobradas = document.getElementById('card-horas-cobradas-qtd');
-  if (elHorasCobradas) elHorasCobradas.textContent = formatHours(cards.horas_cobradas) + 'h';
-
-  const elHorasCobraveis = document.getElementById('card-horas-cobraveis-qtd');
-  if (elHorasCobraveis) elHorasCobraveis.textContent = formatHours(cards.horas_cobraveis) + 'h';
+  animateValue('card-total-horas',     cards.total_horas,     formatHours);
+  animateValue('card-horas-cobradas',  cards.horas_cobradas,  formatHours);
+  animateValue('card-horas-cobraveis', cards.horas_cobraveis, formatHours);
 }
 
 function animateValue(elementId, targetValue, formatter) {
