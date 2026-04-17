@@ -291,7 +291,20 @@ document.addEventListener('click', (e) => {
  */
 async function loadFilterOptions() {
   try {
-    const res = await fetch(`${DASH_API_BASE}/api/charts/filters`);
+    const token = localStorage.getItem('authToken');
+    const res = await fetch(`${DASH_API_BASE}/api/charts/filters`, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (res.status === 401) {
+      if (typeof window.logout === 'function') window.logout();
+      else window.location.replace('index.html');
+      throw new Error('Sessão expirada. Faça login novamente.');
+    }
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const data = await res.json();
@@ -331,8 +344,20 @@ function buildDashboardQueryString() {
 async function loadDashboardData() {
   try {
     const qs  = buildDashboardQueryString();
-    const res = await fetch(`${DASH_API_BASE}/api/charts/dashboard${qs}`);
+    const token = localStorage.getItem('authToken');
+    const res = await fetch(`${DASH_API_BASE}/api/charts/dashboard${qs}`, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    });
    
+    if (res.status === 401) {
+      if (typeof window.logout === 'function') window.logout();
+      else window.location.replace('index.html');
+      throw new Error('Sessão expirada. Faça login novamente.');
+    }
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const data = await res.json();

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Painel de Controle de Processos Financeiros - TRADSUL FINANCE" />
-  <title>TRADSUL FINANCE | Painel de Gestão</title>
+  <meta name="description" content="Login - TRADSUL FINANCE" />
+  <title>TRADSUL FINANCE | Login</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,539 +32,92 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
-
-  <!-- Custom CSS -->
+  <!-- Custom CSS (optional if relying entirely on Tailwind) -->
   <link rel="stylesheet" href="style/style.css" />
 </head>
-<body class="bg-slate-100 min-h-screen font-sans">
+<body class="bg-slate-100 min-h-screen font-sans flex items-center justify-center">
 
-  <!-- ===== TOP NAVBAR ===== -->
-  <nav id="navbar" class="bg-blue-900 shadow-lg sticky top-0 z-50">
-    <div class="max-w-full px-6 py-3 flex items-center justify-between">
-      <!-- Logo -->
-      <div class="flex items-center gap-3">
-        <div class="navbar-logo-icon">
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="28" height="28" rx="6" fill="#1d4ed8"/>
-            <path d="M6 14L14 6L22 14L14 22L6 14Z" fill="white" fill-opacity="0.9"/>
-            <path d="M10 14L14 10L18 14L14 18L10 14Z" fill="#1d4ed8"/>
-          </svg>
-        </div>
-        <div>
-          <span class="text-white font-bold text-lg tracking-wide">TRADSUL</span>
-          <span class="text-blue-300 font-semibold text-lg tracking-wide"> FINANCE</span>
-        </div>
+  <div class="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl border border-slate-200">
+    
+    <!-- Logo & Branding -->
+    <div class="flex flex-col items-center justify-center mb-8 gap-3">
+      <div class="flex items-center justify-center w-14 h-14 bg-blue-700 rounded-xl shadow-lg shadow-blue-700/30">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 14L14 6L22 14L14 22L6 14Z" fill="white" fill-opacity="0.9"/>
+          <path d="M10 14L14 10L18 14L14 18L10 14Z" fill="#1d4ed8"/>
+        </svg>
       </div>
-
-      <!-- Center: Tab Navigation -->
-      <div class="nav-tabs flex items-center bg-blue-950/60 rounded-lg p-1 border border-blue-800/40">
-        <button
-          id="tab-processos"
-          onclick="switchView('processos')"
-          class="nav-tab nav-tab--active"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-          Controle de Processos
-        </button>
-        <button
-          id="tab-dashboard"
-          onclick="switchView('dashboard')"
-          class="nav-tab"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
-          </svg>
-          Dashboard Financeiro
-        </button>
-      </div>
-
-      <!-- Right: Version & User info -->
-      <div class="flex items-center gap-4">
-        <span class="text-blue-300 text-xs font-mono bg-blue-950 px-3 py-1 rounded-full border border-blue-700">
-          V 2.0.26
-        </span>
+      <div class="text-center">
+        <h1 class="text-2xl font-bold tracking-wide text-slate-800">
+          TRADSUL <span class="text-blue-700">FINANCE</span>
+        </h1>
+        <p class="text-sm text-slate-500 mt-1">Acesso ao Painel de Gestão</p>
       </div>
     </div>
-  </nav>
 
-  <!-- ================================================================ -->
-  <!-- ===== VIEW: CONTROLE DE PROCESSOS (shown by default) ========== -->
-  <!-- ================================================================ -->
-  <div id="view-processos">
-
-  <!-- ===== PAGE HEADER ===== -->
-  <div class="max-w-full px-6 pt-6 pb-2">
-    <div class="flex items-center gap-2 mb-1">
-      <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-      </svg>
-      <h1 class="text-slate-700 font-semibold text-lg">Controle de Processos</h1>
+    <!-- Error Message Container -->
+    <div id="error-message" class="hidden mb-6 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg font-medium text-center">
+      <!-- Error text will be injected here -->
     </div>
-    <p class="text-slate-400 text-sm">Gerencie e acompanhe os processos financeiros em andamento.</p>
+
+    <!-- Login Form -->
+    <form id="login-form" class="space-y-6">
+      <div>
+        <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">E-mail corporativo</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+            </svg>
+          </div>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            required 
+            class="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow text-sm"
+            placeholder="usuario@tradsul.com.br"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-slate-700 mb-1.5">Senha</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            required 
+            class="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow text-sm"
+            placeholder="••••••••"
+          />
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        id="submit-btn"
+        class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 transition-colors"
+      >
+        Sign In
+      </button>
+    </form>
+    
+    <div class="mt-8 text-center">
+      <p class="text-xs text-slate-400">
+        Ambiente Seguro • TRADSUL Finance
+      </p>
+    </div>
+
   </div>
 
-  <main class="max-w-full px-6 pb-10 space-y-5">
-
-    <!-- ===== FILTER PANEL ===== -->
-    <section id="filter-panel" class="bg-slate-800 rounded-xl shadow-md p-5">
-      <div class="flex items-center gap-2 mb-4">
-        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-        </svg>
-        <h2 class="text-slate-200 font-medium text-sm uppercase tracking-wider">Filtros de Pesquisa</h2>
-      </div>
-
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-3 items-end">
-
-        <!-- N. Tradsul -->
-        <div class="filter-field relative col-span-1">
-          <label for="input-codigo" class="filter-label">N. Tradsul</label>
-          <input
-            type="text"
-            id="input-codigo"
-            placeholder="Ex: 12345"
-            class="filter-input"
-            autocomplete="off"
-          />
-          <div id="autocomplete-codigo" class="autocomplete-dropdown hidden"></div>
-        </div>
-
-        <!-- Segurado -->
-        <div class="filter-field relative col-span-1 xl:col-span-2">
-          <label for="input-segurado" class="filter-label">Segurado</label>
-          <input
-            type="text"
-            id="input-segurado"
-            placeholder="Nome do segurado..."
-            class="filter-input"
-            autocomplete="off"
-          />
-          <div id="autocomplete-segurado" class="autocomplete-dropdown hidden"></div>
-        </div>
-
-        <!-- Seguradora -->
-        <div class="filter-field col-span-1">
-          <label for="select-seguradora" class="filter-label">Seguradora</label>
-          <select id="select-seguradora" class="filter-select">
-            <option value="">Todas</option>
-          </select>
-        </div>
-
-        <!-- Situação -->
-        <div class="filter-field col-span-1">
-          <label for="select-situacao" class="filter-label">Situação</label>
-          <select id="select-situacao" class="filter-select">
-            <option value="">Todas</option>
-          </select>
-        </div>
-
-        <!-- Operação -->
-        <div class="filter-field col-span-1">
-          <label for="select-operacao" class="filter-label">Operação</label>
-          <select id="select-operacao" class="filter-select">
-            <option value="">Todas</option>
-          </select>
-        </div>
-
-        <!-- Status BH -->
-        <div class="filter-field col-span-1">
-          <label for="select-status-bh" class="filter-label">Status BH</label>
-          <select id="select-status-bh" class="filter-select">
-            <option value="">Todos</option>
-          </select>
-        </div>
-
-        <!-- Alerta BH -->
-        <div class="filter-field col-span-1">
-          <label for="select-alerta-bh" class="filter-label">Alerta BH</label>
-          <select id="select-alerta-bh" class="filter-select">
-            <option value="">Todos</option>
-          </select>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="filter-field col-span-1 flex gap-2 items-end">
-          <button id="btn-buscar" class="btn-primary flex-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            Buscar
-          </button>
-          <button id="btn-limpar" class="btn-secondary">
-            Limpar
-          </button>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ===== DATA TABLE SECTION ===== -->
-    <section id="table-section" class="bg-white rounded-xl shadow-md overflow-hidden">
-
-      <!-- Table Header Bar -->
-      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-slate-50">
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 10h18M3 14h18M3 6h18M3 18h18"/>
-          </svg>
-          <span class="text-slate-600 font-medium text-sm">Processos</span>
-          <span id="total-records-badge" class="text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded-full">–</span>
-        </div>
-        <div id="loading-indicator" class="hidden flex items-center gap-2 text-slate-400 text-xs">
-          <div class="spinner-sm"></div>
-          <span>Carregando...</span>
-        </div>
-      </div>
-
-      <!-- Scrollable Table -->
-      <div class="table-scroll-wrapper" style="overflow-x: auto; max-width: 100%; display: block;">
-        <table id="processos-table" class="w-full text-sm">
-          <thead>
-            <tr class="bg-slate-100 border-b border-slate-200">
-              <th class="th-cell"
-                style="min-width:280px;max-width:280px;position:sticky;left:0;z-index:20;background:#f8fafc;white-space:nowrap;"
-              >Situação</th>
-              <th class="th-cell"
-                style="min-width:160px;max-width:160px;position:sticky;left:220px;z-index:20;background:#f8fafc;white-space:nowrap;border-right:2px solid #e2e8f0;"
-              >Cód. Sinistro</th>
-              <th class="th-cell" style="min-width:160px;white-space:nowrap;">Segurado</th>
-              <th class="th-cell" style="min-width:130px;white-space:nowrap;">Data Cadastro</th>
-              <th class="th-cell" style="min-width:150px;white-space:nowrap;">Seguradora</th>
-              <th class="th-cell" style="min-width:130px;white-space:nowrap;">Operação</th>
-              <th class="th-cell" style="min-width:130px;white-space:nowrap;">Últ. Atividade</th>
-              <th class="th-cell" style="min-width:150px;white-space:nowrap;">Alerta Cobrança</th>
-              <th class="th-cell" style="min-width:170px;white-space:nowrap;">Status BH</th>
-              <th class="th-cell" style="min-width:320px;white-space:nowrap;">OBS</th>
-              <th class="th-cell text-center" style="min-width:130px; white-space:nowrap;">Total H Cobrar</th>
-              <th class="th-cell text-center" style="min-width:140px; white-space:nowrap;">Total H Cobradas</th>
-              <th class="th-cell text-center" style="min-width:140px; white-space:nowrap;">Total H Sinistro</th>
-              <th class="th-cell" style="min-width:180px;white-space:nowrap;">Alerta BH</th>
-              <th class="th-cell text-center" style="min-width:110px;white-space:nowrap;">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="table-body">
-            <!-- Populated by JS -->
-            <tr id="row-placeholder">
-              <td colspan="15" class="text-center py-16 text-slate-400">
-                <div class="flex flex-col items-center gap-3">
-                  <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                  </svg>
-                  <span class="text-sm">Nenhum processo encontrado.</span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div id="pagination-bar" class="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-slate-50">
-        <span id="pagination-info" class="text-xs text-slate-500">–</span>
-        <div class="flex items-center gap-2">
-          <button id="btn-prev" class="pagination-btn" disabled>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-            Anterior
-          </button>
-          <div id="page-numbers" class="flex gap-1"></div>
-          <button id="btn-next" class="pagination-btn" disabled>
-            Próximo
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-    </section>
-  </main>
-
-  </div><!-- /view-processos -->
-
-  <!-- ================================================================ -->
-  <!-- ===== VIEW: DASHBOARD FINANCEIRO (hidden by default) ========== -->
-  <!-- ================================================================ -->
-  <div id="view-dashboard" class="hidden">
-
-    <!-- Dashboard Page Header -->
-    <div class="max-w-full px-6 pt-6 pb-2">
-      <div class="flex items-center gap-2 mb-1">
-        <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
-        </svg>
-        <h1 class="text-slate-700 font-semibold text-lg">Dashboard Financeiro</h1>
-      </div>
-      <p class="text-slate-400 text-sm">Visão geral dos indicadores financeiros e produtividade.</p>
-    </div>
-
-    <main class="max-w-full px-6 pb-10 space-y-6">
-
-      <!-- ===== DASHBOARD FILTERS ===== -->
-      <section id="dashboard-filters" class="bg-slate-800 rounded-xl shadow-md p-5" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155;">
-        <div class="flex items-center gap-2 mb-4">
-          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-          </svg>
-          <h2 class="text-slate-200 font-medium text-sm uppercase tracking-wider">Filtros do Dashboard</h2>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-end">
-
-          <!-- Date Range: De -->
-          <div class="filter-field">
-            <label for="dash-filter-de" class="filter-label">De</label>
-            <input type="date" id="dash-filter-de" class="filter-input" />
-          </div>
-
-          <!-- Date Range: Até -->
-          <div class="filter-field">
-            <label for="dash-filter-ate" class="filter-label">Até</label>
-            <input type="date" id="dash-filter-ate" class="filter-input" />
-          </div>
-
-          <!-- Multi-select: Operação -->
-          <div class="filter-field relative" id="ms-operacao-wrapper">
-            <label class="filter-label">Operação</label>
-            <button type="button" id="ms-operacao-trigger" class="ms-trigger" onclick="toggleMultiSelect('operacao')">
-              <span id="ms-operacao-label" class="ms-trigger-label">Todas</span>
-              <svg class="w-3.5 h-3.5 text-slate-400 flex-shrink-0 ms-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div id="ms-operacao-dropdown" class="ms-dropdown hidden">
-              <div class="ms-search-wrapper">
-                <input type="text" class="ms-search" placeholder="Buscar operação..." oninput="filterMultiSelectOptions('operacao', this.value)" />
-              </div>
-              <div id="ms-operacao-options" class="ms-options">
-                <!-- populated by JS -->
-              </div>
-              <div class="ms-footer">
-                <button type="button" class="ms-footer-btn" onclick="clearMultiSelect('operacao')">Limpar</button>
-                <button type="button" class="ms-footer-btn ms-footer-btn--primary" onclick="applyMultiSelect('operacao')">Aplicar</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Multi-select: Seguradora -->
-          <div class="filter-field relative" id="ms-seguradora-wrapper">
-            <label class="filter-label">Seguradora</label>
-            <button type="button" id="ms-seguradora-trigger" class="ms-trigger" onclick="toggleMultiSelect('seguradora')">
-              <span id="ms-seguradora-label" class="ms-trigger-label">Todas</span>
-              <svg class="w-3.5 h-3.5 text-slate-400 flex-shrink-0 ms-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div id="ms-seguradora-dropdown" class="ms-dropdown hidden">
-              <div class="ms-search-wrapper">
-                <input type="text" class="ms-search" placeholder="Buscar seguradora..." oninput="filterMultiSelectOptions('seguradora', this.value)" />
-              </div>
-              <div id="ms-seguradora-options" class="ms-options">
-                <!-- populated by JS -->
-              </div>
-              <div class="ms-footer">
-                <button type="button" class="ms-footer-btn" onclick="clearMultiSelect('seguradora')">Limpar</button>
-                <button type="button" class="ms-footer-btn ms-footer-btn--primary" onclick="applyMultiSelect('seguradora')">Aplicar</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Multi-select: Perito / Regulador -->
-          <div class="filter-field relative" id="ms-perito-wrapper">
-            <label class="filter-label">Perito</label>
-            <button type="button" id="ms-perito-trigger" class="ms-trigger" onclick="toggleMultiSelect('perito')">
-              <span id="ms-perito-label" class="ms-trigger-label">Todos</span>
-              <svg class="w-3.5 h-3.5 text-slate-400 flex-shrink-0 ms-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div id="ms-perito-dropdown" class="ms-dropdown hidden">
-              <div class="ms-search-wrapper">
-                <input type="text" class="ms-search" placeholder="Buscar perito..." oninput="filterMultiSelectOptions('perito', this.value)" />
-              </div>
-              <div id="ms-perito-options" class="ms-options">
-                <!-- populated by JS -->
-              </div>
-              <div class="ms-footer">
-                <button type="button" class="ms-footer-btn" onclick="clearMultiSelect('perito')">Limpar</button>
-                <button type="button" class="ms-footer-btn ms-footer-btn--primary" onclick="applyMultiSelect('perito')">Aplicar</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Buttons -->
-          <div class="filter-field flex gap-2 items-end">
-            <button id="btn-dash-filtrar" class="btn-primary flex-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-              </svg>
-              Filtrar
-            </button>
-            <button id="btn-dash-limpar" class="btn-secondary">Limpar</button>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ===== KPI CARDS ===== -->
-      <section id="kpi-cards" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-
-        <!-- Card 1: Total de Horas -->
-        <div class="kpi-card group">
-          <div class="kpi-card-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="kpi-card-label">Total de Horas</p>
-            <p id="card-total-horas" class="kpi-card-value">–</p>
-          </div>
-        </div>
-
-        <!-- Card 2: Horas Cobradas -->
-        <div class="kpi-card group">
-          <div class="kpi-card-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="kpi-card-label">Horas Cobradas</p>
-            <p id="card-horas-cobradas" class="kpi-card-value">–</p>
-          </div>
-        </div>
-
-        <!-- Card 3: Horas Cobráveis -->
-        <div class="kpi-card group">
-          <div class="kpi-card-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-            </svg>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="kpi-card-label">Horas Cobráveis</p>
-            <p id="card-horas-cobraveis" class="kpi-card-value">–</p>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- ===== CHARTS GRID ===== -->
-      <section id="charts-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- Chart 1: Horas Produzidas (Bar) -->
-        <div class="chart-card">
-          <div class="chart-card-header">
-            <h3 class="chart-card-title">Horas Produzidas</h3>
-            <span class="chart-card-subtitle">Por perito / regulador</span>
-          </div>
-          <div class="chart-canvas-wrapper">
-            <canvas id="chart-horas-produzidas"></canvas>
-          </div>
-        </div>
-
-        <!-- Chart 2: Horas Cobráveis (Bar) -->
-        <div class="chart-card">
-          <div class="chart-card-header flex justify-between items-start">
-            <div>
-              <h3 class="chart-card-title">Horas Cobráveis</h3>
-              <span class="chart-card-subtitle">Por seguradora ou operação</span>
-            </div>
-            <div class="flex bg-slate-100 rounded-md p-1 border border-slate-200">
-              <button id="btn-view-seguradora" onclick="toggleCobraveisView('seguradora')" class="px-3 py-1 text-xs font-semibold rounded-md transition-colors bg-blue-600 text-white shadow-sm">Por Seguradora</button>
-              <button id="btn-view-operacao" onclick="toggleCobraveisView('operacao')" class="px-3 py-1 text-xs font-semibold rounded-md transition-colors bg-transparent text-slate-500 hover:text-slate-700">Por Operação</button>
-            </div>
-          </div>
-          <div class="chart-canvas-wrapper mt-2">
-            <canvas id="chart-horas-cobraveis"></canvas>
-          </div>
-        </div>
-
-        <!-- Chart 3: Horas por Seguradora (Doughnut) -->
-        <div class="chart-card">
-          <div class="chart-card-header">
-            <h3 class="chart-card-title">Distribuição por Seguradora</h3>
-            <span class="chart-card-subtitle">Horas totais por seguradora</span>
-          </div>
-          <div class="chart-canvas-wrapper chart-canvas-wrapper--doughnut">
-            <canvas id="chart-seguradoras"></canvas>
-          </div>
-        </div>
-
-        <!-- Chart 4: Faturado por Período (Bar) -->
-        <div class="chart-card">
-          <div class="chart-card-header">
-            <h3 class="chart-card-title">Faturado por Período</h3>
-            <span class="chart-card-subtitle">Horas faturadas mês a mês</span>
-          </div>
-          <div class="chart-canvas-wrapper">
-            <canvas id="chart-faturado-periodo"></canvas>
-          </div>
-        </div>
-
-      </section>
-
-    </main>
-  </div><!-- /view-dashboard -->
-
-  <!-- ===== TOAST NOTIFICATION ===== -->
-  <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
-
-  <!-- ===== MODAL GERAR BH ===== -->
-  <div id="modal-gerar-bh" class="fixed inset-0 z-[100] bg-slate-900/50 flex items-center justify-center hidden">
-    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-      <h2 class="text-xl font-bold text-blue-700 mb-4">Gerador de Boletins de Horas</h2>
-      
-      <form id="form-gerar-bh" class="space-y-4">
-        <div>
-          <label for="modal-processo" class="block text-sm font-medium text-slate-700 mb-1">Nº Processo</label>
-          <input type="text" id="modal-processo" readonly class="w-full border border-slate-300 rounded-md px-3 py-2 bg-gray-100 cursor-not-allowed text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        
-        <div>
-          <label for="modal-dt-inicial" class="block text-sm font-medium text-slate-700 mb-1">Data e Hora Inicial</label>
-          <input type="datetime-local" id="modal-dt-inicial" required class="w-full border border-slate-300 rounded-md px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        
-        <div>
-          <label for="modal-dt-final" class="block text-sm font-medium text-slate-700 mb-1">Data e Hora Final</label>
-          <input type="datetime-local" id="modal-dt-final" required class="w-full border border-slate-300 rounded-md px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        
-        <div class="flex flex-col gap-3 mt-6">
-          <button type="submit" id="btn-submit-bh" class="bg-blue-700 hover:bg-blue-800 text-white w-full py-2.5 rounded-md font-semibold transition-colors flex justify-center items-center gap-2">
-            Gerar Boletim
-          </button>
-          <button type="button" id="btn-cancelar-bh" class="text-slate-500 hover:text-slate-700 text-sm font-medium transition-colors">
-            Cancelar
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Deferred JS -->
-  <script src="script/processos.js" defer></script>
-  <script src="script/charts.js" defer></script>
+  <!-- Login Logic -->
+  <script src="./script/login.js" defer></script>
 </body>
 </html>
